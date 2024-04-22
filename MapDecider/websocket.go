@@ -9,24 +9,23 @@ import (
 )
 
 func RegisterWebsockets(r *gin.Engine) {
-	var client *websocket.Conn
-	var err error
-
+	var client []*websocket.Conn
 	r.GET("/subscribe", func(ctx *gin.Context) {
-		client, err = websocket.Accept(ctx.Writer, ctx.Request, nil)
+		c, err := websocket.Accept(ctx.Writer, ctx.Request, nil)
 		if err != nil {
 			log.Println(err)
 			return
 		}
-		defer client.CloseNow()
+		defer c.CloseNow()
+		client = append(client, c)
 		for {
-			_, data, err := client.Read(ctx)
+			_, data, err := c.Read(ctx)
 			if err != nil {
 				log.Println(err)
 				return
 			}
 			fmt.Println(string(data))
-			client.Write(ctx, websocket.MessageText, data)
+			c.Write(ctx, websocket.MessageText, data)
 		}
 	})
 	r.POST("/publish", func(ctx *gin.Context) {
@@ -39,7 +38,9 @@ func RegisterWebsockets(r *gin.Engine) {
 			ctx.String(500, err.Error())
 			return
 		}
-		client.Write(ctx, websocket.MessageText, data)
+		for i := range client {
+			client[i].Write(ctx, websocket.MessageText, data)
+		}
 		ctx.String(202, "accepted")
 	})
 }

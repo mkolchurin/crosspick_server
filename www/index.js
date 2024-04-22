@@ -23,32 +23,19 @@
         console.error('unexpected message type', typeof ev.data)
         return
       }
-      const p = appendLog(ev.data)
-      if (expectingMessage) {
-        p.scrollIntoView()
-        expectingMessage = false
-      }
+      // id = Number.parseInt(ev.data)
+      document.getElementById(ev.data).children[0].src = "http://localhost/api/v1/storage/maps/default.jpg"
+      console.log(ev.data)
     })
   }
   dial()
 
-  const messageLog = document.getElementById('message-log')
   const publishForm = document.getElementById('publish-form')
-  const messageInput = document.getElementById('message-input')
 
   // appendLog appends the passed text to messageLog.
   function appendLog(text, error) {
-    const p = document.createElement('p')
-    // Adding a timestamp to each message makes the log easier to read.
-    p.innerText = `${new Date().toLocaleTimeString()}: ${text}`
-    if (error) {
-      p.style.color = 'red'
-      p.style.fontStyle = 'bold'
-    }
-    messageLog.append(p)
-    return p
+    console.log(text)
   }
-  appendLog('Submit a message to get started!')
 
   // onsubmit publishes the message from the user when the form is submitted.
   publishForm.onsubmit = async ev => {
