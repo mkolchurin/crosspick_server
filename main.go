@@ -17,7 +17,7 @@ func main() {
 	StaticStorage.RegisterStatic(r)
 	MapDecider.RegisterWebsockets(r)
 
-	err := r.Run(":9988")
+	err := r.Run(":80")
 	if err != nil {
 		log.Fatal(err)
 	}
