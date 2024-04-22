@@ -1,9 +1,10 @@
 package main
 
 import (
-	"crosspick/MapDecider"
-	"crosspick/StaticStorage"
 	"log"
+
+	"github.com/mkolchurin/crosspick_server/MapDecider"
+	"github.com/mkolchurin/crosspick_server/StaticStorage"
 
 	"github.com/gin-gonic/gin"
 )
