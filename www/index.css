@@ -78,3 +78,9 @@
 #publish-form input[type='submit']:active {
   background-color: red;
 } */
+
+.map {
+  position: relative;
+  top: 0;
+  left: 0;
+}

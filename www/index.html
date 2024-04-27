@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8" />
-  <title>nhooyr.io/websocket - Chat Example</title>
+  <title>crosspick - pick your map</title>
   <meta name="viewport" content="width=device-width" />
 
   <!-- <link href="https://unpkg.com/sanitize.css" rel="stylesheet" /> -->
@@ -14,31 +14,10 @@
 
 <body>
   <div id="root">
-    <div id="message-log"></div>
+    <!-- <div id="message-log"></div> -->
+    <button id="clear-button">clear</button>
     <div id="publish-form-container">
-      <form id="publish-form">
-        <button type="submit" id="0" style="width: 5cm; height: 5cm;">
-          <img src="http://localhost/api/v1/storage/maps/2p_tazins_folly.jpg" style="width: 4cm;">
-        </button>
-        <button type="submit" id="1" style="width: 5cm; height: 5cm;">
-          <img src="http://localhost/api/v1/storage/maps/2p_marsh_of_rakat.jpg" style="width: 4cm;">
-        </button>
-        <button type="submit" id="2" style="width: 5cm; height: 5cm;">
-          <img src="http://localhost/api/v1/storage/maps/2p_bloody hell.jpg" style="width: 4cm;">
-        </button>
-        <p></p>
-        <button type="submit" id="3" style="width: 5cm; height: 5cm;">
-          <img src="http://localhost/api/v1/storage/maps/2p_colosseum_suicide.jpg" style="width: 4cm;">
-        </button>
-        <button type="submit" id="4" style="width: 5cm; height: 5cm;">
-          <img src="http://localhost/api/v1/storage/maps/2p_fallen_city.jpg" style="width: 4cm;">
-        </button>
-        <button type="submit" id="5" style="width: 5cm; height: 5cm;">
-          <img src="http://localhost/api/v1/storage/maps/2p_haines_demise.jpg" style="width: 4cm;">
-        </button>
-        <button type="submit" id="6" style="width: 5cm; height: 5cm;">
-          <img src="http://localhost/api/v1/storage/maps/2p_hellfire_canyon.jpg" style="width: 4cm;">
-        </button>
+      <form id="mapContainer">
       </form>
     </div>
   </div>
