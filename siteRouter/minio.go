@@ -1,4 +1,4 @@
-package StaticStorage
+package siteRouter
 
 import (
 	"context"
@@ -12,12 +12,12 @@ import (
 
 const (
 	endpoint        = "192.168.0.111:9000"
-	accessKeyID     = "aEZ6lA53y7d5uEPG2dfX"
-	secretAccessKey = "47kthiLGl1zDbm9UPQ0IGH8aDUTfYdpmHbuLeVXY"
+	accessKeyID     = "j5oJsXZ0B9smNeeMUDLY"
+	secretAccessKey = "tJyPtxrRs3JPnl3NnFyfXz0iYYKTCGdwDQ9KwB0N"
 	useSSL          = false
 )
 
-func RegisterMinio(r *gin.Engine) {
+func AddMinio(r *gin.Engine) {
 	minioClient, err := minio.New(endpoint, &minio.Options{
 		Creds:  credentials.NewStaticV4(accessKeyID, secretAccessKey, ""),
 		Secure: useSSL,

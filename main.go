@@ -3,19 +3,20 @@ package main
 import (
 	"log"
 
-	"github.com/mkolchurin/crosspick_server/MapDecider"
-	"github.com/mkolchurin/crosspick_server/StaticStorage"
+	"github.com/mkolchurin/crosspick_server/db"
+	"github.com/mkolchurin/crosspick_server/siteRouter"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	db.Connect()
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
-
-	StaticStorage.RegisterMinio(r)
-	StaticStorage.RegisterStatic(r)
-	MapDecider.RegisterWebsockets(r)
+	siteRouter.AddMaps(r)
+	siteRouter.AddMinio(r)
+	siteRouter.AddSpa(r)
+	siteRouter.AddWsDecider(r)
 
 	err := r.Run(":9988")
 	if err != nil {
