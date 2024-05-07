@@ -1,0 +1,3 @@
+[submodule "decider-front"]
+	path = decider-front
+	url = git@github.com:ElamanBaiguanishev/decider-front.git
