@@ -18,8 +18,8 @@ type MapPool struct {
 }
 
 type DeciderUser struct {
-	uid      string
-	lastPing int64
+	Uid      string `json:"uid"`
+	LastPing int64  `json:"lastPing"`
 }
 
 type Decider struct {
@@ -30,7 +30,7 @@ type Decider struct {
 	/* rules TODO: */
 }
 
-var deciders map[string][]*Decider
+var deciders = make(map[string][]*Decider)
 
 const (
 	roleUser     = "user"
@@ -44,13 +44,13 @@ func init() {
 			for _, dec := range deciders[decider] {
 				dec.mux.Lock()
 				for index, user := range dec.Users {
-					if time.Now().Unix()-user.lastPing > timeToLive {
+					if time.Now().Unix()-user.LastPing > timeToLive {
 						// remove user
 						dec.Users = append(dec.Users[:index], dec.Users[index+1:]...)
 					}
 				}
 				for index, observer := range dec.Observers {
-					if time.Now().Unix()-observer.lastPing > timeToLive {
+					if time.Now().Unix()-observer.LastPing > timeToLive {
 						// remove observer
 						dec.Observers = append(dec.Observers[:index], dec.Observers[index+1:]...)
 					}
@@ -63,12 +63,8 @@ func init() {
 }
 
 func CreateParty(deciderUid string, userUid string) (partyUid int, err error) {
-	if deciders[deciderUid] == nil {
-		deciders[deciderUid] = make([]*Decider, 0)
-		return
-	}
 	deciders[deciderUid] = append(deciders[deciderUid], &Decider{
-		Users:     []DeciderUser{{uid: userUid, lastPing: time.Now().Unix()}},
+		Users:     []DeciderUser{{Uid: userUid, LastPing: time.Now().Unix()}},
 		Observers: []DeciderUser{},
 		Pool:      MapPool{},
 	})
@@ -88,10 +84,10 @@ func JoinParty(deciderUid string, partyUid int, user_uid string, role string) er
 			return errors.Errorf("Full")
 		}
 		deciders[deciderUid][partyUid].Users =
-			append(deciders[deciderUid][partyUid].Users, DeciderUser{uid: user_uid, lastPing: time.Now().Unix()})
+			append(deciders[deciderUid][partyUid].Users, DeciderUser{Uid: user_uid, LastPing: time.Now().Unix()})
 	case roleObserver:
 		deciders[deciderUid][partyUid].Observers =
-			append(deciders[deciderUid][partyUid].Observers, DeciderUser{uid: user_uid, lastPing: time.Now().Unix()})
+			append(deciders[deciderUid][partyUid].Observers, DeciderUser{Uid: user_uid, LastPing: time.Now().Unix()})
 	default:
 		return errors.Errorf("Invalid Role")
 	}
@@ -105,14 +101,14 @@ func LeaveParty(deciderUid string, partyUid int, user_uid string) error {
 	deciders[deciderUid][partyUid].mux.Lock()
 	defer deciders[deciderUid][partyUid].mux.Unlock()
 	for index, user := range deciders[deciderUid][partyUid].Users {
-		if user.uid == user_uid {
+		if user.Uid == user_uid {
 			deciders[deciderUid][partyUid].Users =
 				append(deciders[deciderUid][partyUid].Users[:index], deciders[deciderUid][partyUid].Users[index+1:]...)
 			return nil
 		}
 	}
 	for index, observer := range deciders[deciderUid][partyUid].Observers {
-		if observer.uid == user_uid {
+		if observer.Uid == user_uid {
 			deciders[deciderUid][partyUid].Observers =
 				append(deciders[deciderUid][partyUid].Observers[:index], deciders[deciderUid][partyUid].Observers[index+1:]...)
 			return nil
