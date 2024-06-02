@@ -1,13 +1,13 @@
-package siteRouter
+package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/mkolchurin/crosspick_server/db"
+	"github.com/mkolchurin/crosspick_server/database"
 )
 
 func AddMaps(r *gin.Engine) {
 	r.GET("/api/v1/maps", func(ctx *gin.Context) {
-		maps, err := db.GetMaps(0, -1)
+		maps, err := database.GetMaps(0, -1)
 		if err != nil {
 			processError(ctx, err)
 			return

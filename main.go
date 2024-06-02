@@ -3,20 +3,20 @@ package main
 import (
 	"log"
 
-	"github.com/mkolchurin/crosspick_server/db"
-	"github.com/mkolchurin/crosspick_server/siteRouter"
+	"github.com/mkolchurin/crosspick_server/database"
+	"github.com/mkolchurin/crosspick_server/router"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	db.Connect()
+	database.Connect()
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
-	siteRouter.AddMaps(r)
-	siteRouter.AddMinio(r)
-	siteRouter.AddSpa(r)
-	siteRouter.AddWsDecider(r)
+	router.AddMaps(r)
+	router.AddMinio(r)
+	router.AddSpa(r)
+	router.AddWsDecider(r)
 
 	err := r.Run(":9988")
 	if err != nil {

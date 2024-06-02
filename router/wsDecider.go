@@ -1,4 +1,4 @@
-package siteRouter
+package router
 
 import (
 	"encoding/json"
@@ -6,7 +6,7 @@ import (
 	"log"
 
 	"github.com/gin-gonic/gin"
-	"github.com/mkolchurin/crosspick_server/logic"
+	"github.com/mkolchurin/crosspick_server/decider"
 	"nhooyr.io/websocket"
 )
 
@@ -91,7 +91,7 @@ func (req WsMessage) processRequest(deciderUid string) (*WsMessage, error) {
 	}
 	switch req.Type {
 	case RequestTypeCreate:
-		partyUid, err := logic.CreateParty(deciderUid, req.User.UID)
+		partyUid, err := decider.CreateParty(deciderUid, req.User.UID)
 		return &WsMessage{Type: RequestTypeUpdate, User: req.User, Body: WsResponse{PartyUid: partyUid, Result: err.Error()}}, err
 	case RequestTypeJoin:
 		bodyJoin := WsBodyJoin{}
@@ -99,7 +99,7 @@ func (req WsMessage) processRequest(deciderUid string) (*WsMessage, error) {
 		if err != nil {
 			return nil, err
 		}
-		err := logic.JoinParty(deciderUid, bodyJoin.PartyUid, req.User.UID, bodyJoin.Role)
+		err := decider.JoinParty(deciderUid, bodyJoin.PartyUid, req.User.UID, bodyJoin.Role)
 		return &WsMessage{Type: RequestTypeUpdate, User: req.User, Body: WsResponse{PartyUid: bodyJoin.PartyUid, Result: err.Error()}}, err
 	case RequestTypeLeave:
 		bodyLeave := WsBodyLeave{}
@@ -107,7 +107,7 @@ func (req WsMessage) processRequest(deciderUid string) (*WsMessage, error) {
 		if err != nil {
 			return nil, err
 		}
-		err := logic.LeaveParty(deciderUid, bodyLeave.PartyUid, req.User.UID)
+		err := decider.LeaveParty(deciderUid, bodyLeave.PartyUid, req.User.UID)
 		return &WsMessage{Type: RequestTypeUpdate, User: req.User, Body: WsResponse{PartyUid: bodyLeave.PartyUid, Result: err.Error()}}, err
 	case RequestTypeUpdate:
 		bodyUpdate := WsBodyUpdate{}
@@ -115,7 +115,7 @@ func (req WsMessage) processRequest(deciderUid string) (*WsMessage, error) {
 		if err != nil {
 			return nil, err
 		}
-		party, err := logic.GetParty(deciderUid, bodyUpdate.PartyUid)
+		party, err := decider.GetParty(deciderUid, bodyUpdate.PartyUid)
 		return &WsMessage{Type: RequestTypeUpdate, User: req.User, Body: party}, err
 	case RequestTypePost:
 		bodyPost := WsBodyPost{}

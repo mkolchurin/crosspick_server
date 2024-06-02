@@ -1,4 +1,4 @@
-package siteRouter
+package router
 
 import (
 	"net/http"

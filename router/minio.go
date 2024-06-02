@@ -1,4 +1,4 @@
-package siteRouter
+package router
 
 import (
 	"context"
@@ -11,9 +11,9 @@ import (
 )
 
 const (
-	endpoint        = "192.168.0.111:9000"
-	accessKeyID     = "j5oJsXZ0B9smNeeMUDLY"
-	secretAccessKey = "tJyPtxrRs3JPnl3NnFyfXz0iYYKTCGdwDQ9KwB0N"
+	endpoint        = "1.mkolchurin.ru:9000"
+	accessKeyID     = "r7OJyibmKkeSh74kIVOD"
+	secretAccessKey = "Gb4r3DqDOkM1Gw59jNgZ4N6hENaKsIbnLbqHLoDW"
 	useSSL          = false
 )
 

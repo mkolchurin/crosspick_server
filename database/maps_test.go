@@ -1,13 +1,11 @@
-package tests
+package database
 
 import (
 	"testing"
-
-	"github.com/mkolchurin/crosspick_server/db"
 )
 
 func TestGetMaps(t *testing.T) {
-	maps, err := db.GetMaps(0, 1)
+	maps, err := GetMaps(0, 1)
 	if err != nil {
 		t.Error(err)
 	}
@@ -15,7 +13,7 @@ func TestGetMaps(t *testing.T) {
 		t.Error("Expected 1 map, got", len(maps))
 	}
 	t.Log(maps)
-	maps, err = db.GetMaps(1, 3)
+	maps, err = GetMaps(1, 3)
 	if err != nil {
 		t.Error(err)
 	}
@@ -26,15 +24,15 @@ func TestGetMaps(t *testing.T) {
 }
 
 func TestInsertMap(t *testing.T) {
-	err := db.InsertMap("test", 2, "test", "test", "test")
+	err := InsertMap("test", 2, "test", "test", "test")
 	if err != nil {
 		t.Error(err)
 	}
-	db.RemoveMap("test")
+	RemoveMap("test")
 }
 
 func TestRemoveMap(t *testing.T) {
-	err := db.RemoveMap("test")
+	err := RemoveMap("test")
 	if err != nil {
 		t.Error(err)
 	}
