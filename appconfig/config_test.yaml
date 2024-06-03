@@ -1,0 +1,12 @@
+S3:
+  endpoint: "endpoint"
+  accessKeyID: "accessKeyID"
+  secretAccessKey: "secretAccessKey"
+  useSSL: false
+  resourcesBucket: "resourcesBucket"
+database:
+  host: "host"
+  port: 1234
+  username: "username"
+  password: "password"
+  dbname: "dbname"
