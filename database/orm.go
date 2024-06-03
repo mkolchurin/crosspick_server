@@ -3,6 +3,7 @@ package database
 import (
 	"fmt"
 
+	"github.com/mkolchurin/crosspick_server/appconfig"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -13,21 +14,17 @@ type Product struct {
 	Price uint
 }
 
-const (
-	host     = "192.168.0.111"
-	port     = 5432
-	user     = "root"
-	password = ""
-	dbname   = "root"
-)
+/* this var is used in other source files (maps.go) */
+var db *gorm.DB
 
-func Connect() (*gorm.DB, error) {
+func Connect(cfg *appconfig.AppConfig) error {
 	dsn := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname)
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+		cfg.Database.Host, cfg.Database.Port, cfg.Database.Username, cfg.Database.Password, cfg.Database.DatabaseName)
+	var err error
+	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return db, nil
+	return nil
 }

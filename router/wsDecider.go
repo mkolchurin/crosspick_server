@@ -135,7 +135,7 @@ func processError(ctx *gin.Context, err error) {
 	ctx.String(500, err.Error())
 }
 
-func AddWsDecider(r *gin.Engine) {
+func InitWebSocketsDecider(r *gin.Engine) {
 	r.GET("/api/v1/decider/*deciderUID", func(ctx *gin.Context) {
 		deciderId := ctx.Param("deciderUID")
 		wsConnection, err := websocket.Accept(ctx.Writer, ctx.Request, nil)

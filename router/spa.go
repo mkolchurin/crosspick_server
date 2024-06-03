@@ -25,6 +25,6 @@ func spa(urlPrefix, spaDirectory string) gin.HandlerFunc {
 	}
 }
 
-func AddSpa(r *gin.Engine) {
+func InitSpa(r *gin.Engine) {
 	r.Use(spa("/", "./www"))
 }

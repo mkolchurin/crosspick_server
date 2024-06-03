@@ -8,19 +8,13 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
+	"github.com/mkolchurin/crosspick_server/appconfig"
 )
 
-const (
-	endpoint        = "1.mkolchurin.ru:9000"
-	accessKeyID     = "r7OJyibmKkeSh74kIVOD"
-	secretAccessKey = "Gb4r3DqDOkM1Gw59jNgZ4N6hENaKsIbnLbqHLoDW"
-	useSSL          = false
-)
-
-func AddMinio(r *gin.Engine) {
-	minioClient, err := minio.New(endpoint, &minio.Options{
-		Creds:  credentials.NewStaticV4(accessKeyID, secretAccessKey, ""),
-		Secure: useSSL,
+func InitS3(r *gin.Engine, cfg *appconfig.AppConfig) {
+	minioClient, err := minio.New(cfg.S3.Endpoint, &minio.Options{
+		Creds:  credentials.NewStaticV4(cfg.S3.AccessKeyID, cfg.S3.SecretAccessKey, ""),
+		Secure: cfg.S3.UseSSL,
 	})
 	if err != nil {
 		log.Fatalln(err)

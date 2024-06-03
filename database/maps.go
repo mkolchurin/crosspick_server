@@ -2,9 +2,6 @@ package database
 
 import (
 	"fmt"
-	"log"
-
-	"gorm.io/gorm"
 )
 
 type DbDeciderMap struct {
@@ -15,16 +12,6 @@ type DbDeciderMap struct {
 	Description string
 	Author      string
 	CreatedAt   int64 `gorm:"autoCreateTime"`
-}
-
-var db *gorm.DB
-
-func init() {
-	var err error
-	db, err = Connect()
-	if err != nil {
-		log.Fatal(err)
-	}
 }
 
 func GetMaps(first int, limit int) ([]DbDeciderMap, error) {

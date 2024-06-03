@@ -1,4 +1,4 @@
-package config
+package appconfig
 
 import (
 	"os"
@@ -6,7 +6,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type Config struct {
+type AppConfig struct {
 	S3 struct {
 		Endpoint        string `yaml:"endpoint"`
 		AccessKeyID     string `yaml:"accessKeyID"`
@@ -23,18 +23,14 @@ type Config struct {
 	} `yaml:"database"`
 }
 
-const (
-	configName = "config.yaml"
-)
-
-func GetConfig() (*Config, error) {
-	f, err := os.Open(configName)
+func GetConfig(path string) (*AppConfig, error) {
+	f, err := os.Open(path)
 	if err != nil {
 		return nil, err
 	}
 	defer f.Close()
 
-	var cfg Config
+	var cfg AppConfig
 	decoder := yaml.NewDecoder(f)
 	err = decoder.Decode(&cfg)
 	if err != nil {

@@ -5,7 +5,7 @@ import (
 	"github.com/mkolchurin/crosspick_server/database"
 )
 
-func AddMaps(r *gin.Engine) {
+func InitMaps(r *gin.Engine) {
 	r.GET("/api/v1/maps", func(ctx *gin.Context) {
 		maps, err := database.GetMaps(0, -1)
 		if err != nil {
