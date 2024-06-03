@@ -1,0 +1,12 @@
+S3:
+  endpoint: "example.site:8888"
+  accessKeyID: "accessKeyID"
+  secretAccessKey: "secretAccessKey"
+  useSSL: false
+  resourcesBucket: "maps"
+database:
+  host: "example.site"
+  port: 1111
+  username: "root"
+  password: "password"
+  dbname: "root"
