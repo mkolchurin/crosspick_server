@@ -4,18 +4,19 @@ import (
 	"fmt"
 )
 
-type DbDeciderMap struct {
-	Id          int `gorm:"primaryKey"`
-	Name        string
-	Mode        int
+type Maps struct {
+	Id          uint   `gorm:"primary_key;auto_increment;not_null;type:serial"`
+	Name        string `gorm:"uniq"`
+	Mode        uint16
 	Icon        string
 	Description string
 	Author      string
+	Order       int16
 	CreatedAt   int64 `gorm:"autoCreateTime"`
 }
 
-func GetMaps(first int, limit int) ([]DbDeciderMap, error) {
-	var maps []DbDeciderMap
+func GetMaps(first int, limit int) ([]Maps, error) {
+	var maps []Maps
 	tx := db.Table("maps").Where("id >= ?", fmt.Sprintf("%d", first)).Limit(limit).Find(&maps)
 	if tx.Error != nil {
 		return nil, tx.Error
@@ -23,18 +24,18 @@ func GetMaps(first int, limit int) ([]DbDeciderMap, error) {
 	return maps, nil
 }
 
-func InsertMap(name string, mode int, icon_path string, description string, author string) error {
+func InsertMap(name string, mode uint16, icon_path string, description string, author string) error {
 	if mode < 2 || mode > 8 {
 		return fmt.Errorf("invalid mode")
 	}
-	Map := DbDeciderMap{
+	tx := db.Table("maps").Create(&Maps{
 		Name:        name,
 		Mode:        mode,
 		Icon:        icon_path,
 		Description: description,
+		Order:       0,
 		Author:      author,
-	}
-	tx := db.Table("maps").Create(&Map)
+	})
 	if tx.Error != nil {
 		return tx.Error
 	}
@@ -42,7 +43,7 @@ func InsertMap(name string, mode int, icon_path string, description string, auth
 }
 
 func RemoveMap(name string) error {
-	tx := db.Table("maps").Where("name = ?", name).Delete(&DbDeciderMap{})
+	tx := db.Table("maps").Where("name = ?", name).Delete(&Maps{})
 	if tx.Error != nil {
 		return tx.Error
 	}

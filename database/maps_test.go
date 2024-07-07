@@ -1,8 +1,20 @@
 package database
 
 import (
+	"log"
 	"testing"
+
+	"github.com/mkolchurin/crosspick_server/appconfig"
 )
+
+func init() {
+	cfg, err := appconfig.GetConfig("../config.yaml")
+	if err != nil {
+		log.Fatal(err)
+	}
+	Connect(cfg)
+	db.Table("maps").AutoMigrate(&Maps{})
+}
 
 func TestGetMaps(t *testing.T) {
 	maps, err := GetMaps(0, 1)
@@ -28,7 +40,7 @@ func TestInsertMap(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	RemoveMap("test")
+	// RemoveMap("test")
 }
 
 func TestRemoveMap(t *testing.T) {

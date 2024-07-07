@@ -5,6 +5,8 @@ import (
 
 	"github.com/mkolchurin/crosspick_server/appconfig"
 	"gorm.io/driver/postgres"
+
+	// "gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
@@ -22,7 +24,7 @@ func Connect(cfg *appconfig.AppConfig) error {
 		"password=%s dbname=%s sslmode=disable",
 		cfg.Database.Host, cfg.Database.Port, cfg.Database.Username, cfg.Database.Password, cfg.Database.DatabaseName)
 	var err error
-	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db, err = gorm.Open(postgres.Open(dsn /* "storage.db" */), &gorm.Config{})
 	if err != nil {
 		return err
 	}
