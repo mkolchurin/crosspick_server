@@ -25,13 +25,13 @@ func main() {
 		log.Fatalf("Failed to connect to database with error '%s'", err)
 	}
 
-	gin.SetMode(gin.ReleaseMode)
+	gin.SetMode(gin.DebugMode)
 	r := gin.Default()
+	router.InitWebSocketsDecider(r)
 
 	router.InitMaps(r)
 	router.InitS3(r, cfg)
 	router.InitSpa(r)
-	router.InitWebSocketsDecider(r)
 
 	err = r.Run(ginPort)
 	if err != nil {
