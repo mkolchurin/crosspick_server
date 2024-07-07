@@ -15,5 +15,6 @@ WORKDIR /build
 EXPOSE 9988
 COPY --from=builder /build/crosspicktest /build/crosspicktest
 COPY www /build/www
+COPY config.yaml /build/config.yaml
 
 CMD ["./crosspicktest"]
