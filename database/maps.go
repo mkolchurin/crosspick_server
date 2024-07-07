@@ -16,6 +16,7 @@ type Maps struct {
 	Author      string
 	Order       int16
 	CreatedAt   int64 `gorm:"autoCreateTime"`
+	UploaderId  uint  `gorm:"many2many:users;"`
 }
 
 func GetMaps(first int, limit int) ([]Maps, error) {
@@ -27,7 +28,7 @@ func GetMaps(first int, limit int) ([]Maps, error) {
 	return maps, nil
 }
 
-func InsertMap(name string, mode uint16, icon_path string, description string, author string) error {
+func InsertMap(name string, mode uint16, icon_path string, description string, author string, uploaderId uint) error {
 	if mode < 2 || mode > 8 {
 		return fmt.Errorf("invalid mode")
 	}
@@ -38,6 +39,7 @@ func InsertMap(name string, mode uint16, icon_path string, description string, a
 		Description: description,
 		Order:       0,
 		Author:      author,
+		UploaderId:  uploaderId,
 	})
 	if tx.Error != nil {
 		return tx.Error
