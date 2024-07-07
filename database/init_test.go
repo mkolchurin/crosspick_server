@@ -12,5 +12,5 @@ func init() {
 		log.Fatal(err)
 	}
 	Connect(cfg)
-	db.AutoMigrate(&Deciders{}, &Maps{})
+	db.AutoMigrate(&Users{}, &Roles{}, &Deciders{}, &Maps{})
 }
