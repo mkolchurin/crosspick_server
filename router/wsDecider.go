@@ -92,7 +92,8 @@ func (req WsMessage) processRequest(deciderUid string) (*WsMessage, error) {
 	switch req.Type {
 	case RequestTypeCreate:
 		partyUid, err := decider.CreateParty(deciderUid, req.User.UID)
-		return &WsMessage{Type: RequestTypeUpdate, User: req.User, Body: WsResponse{PartyUid: partyUid, Result: err.Error()}}, err
+		var resp WsMessage = WsMessage{Type: RequestTypeUpdate, User: req.User, Body: WsResponse{PartyUid: partyUid, Result: err.Error()}}
+		return &resp, err
 	case RequestTypeJoin:
 		bodyJoin := WsBodyJoin{}
 		err = json.Unmarshal(reqBody, &bodyJoin)
@@ -100,7 +101,8 @@ func (req WsMessage) processRequest(deciderUid string) (*WsMessage, error) {
 			return nil, err
 		}
 		err := decider.JoinParty(deciderUid, bodyJoin.PartyUid, req.User.UID, bodyJoin.Role)
-		return &WsMessage{Type: RequestTypeUpdate, User: req.User, Body: WsResponse{PartyUid: bodyJoin.PartyUid, Result: err.Error()}}, err
+		var resp WsMessage = WsMessage{Type: RequestTypeUpdate, User: req.User, Body: WsResponse{PartyUid: bodyJoin.PartyUid, Result: err.Error()}}
+		return &resp, err
 	case RequestTypeLeave:
 		bodyLeave := WsBodyLeave{}
 		err = json.Unmarshal(reqBody, &bodyLeave)
@@ -108,7 +110,8 @@ func (req WsMessage) processRequest(deciderUid string) (*WsMessage, error) {
 			return nil, err
 		}
 		err := decider.LeaveParty(deciderUid, bodyLeave.PartyUid, req.User.UID)
-		return &WsMessage{Type: RequestTypeUpdate, User: req.User, Body: WsResponse{PartyUid: bodyLeave.PartyUid, Result: err.Error()}}, err
+		var resp WsMessage = WsMessage{Type: RequestTypeUpdate, User: req.User, Body: WsResponse{PartyUid: bodyLeave.PartyUid, Result: err.Error()}}
+		return &resp, err
 	case RequestTypeUpdate:
 		bodyUpdate := WsBodyUpdate{}
 		err = json.Unmarshal(reqBody, &bodyUpdate)
@@ -116,7 +119,8 @@ func (req WsMessage) processRequest(deciderUid string) (*WsMessage, error) {
 			return nil, err
 		}
 		party, err := decider.GetParty(deciderUid, bodyUpdate.PartyUid)
-		return &WsMessage{Type: RequestTypeUpdate, User: req.User, Body: party}, err
+		var resp WsMessage = WsMessage{Type: RequestTypeUpdate, User: req.User, Body: party}
+		return &resp, err
 	case RequestTypePost:
 		bodyPost := WsBodyPost{}
 		err = json.Unmarshal(reqBody, &bodyPost)
@@ -138,13 +142,17 @@ func processError(ctx *gin.Context, err error) {
 func InitWebSocketsDecider(r *gin.Engine) {
 	r.GET("/api/v1/decider/*deciderUID", func(ctx *gin.Context) {
 		deciderId := ctx.Param("deciderUID")
-		wsConnection, err := websocket.Accept(ctx.Writer, ctx.Request, nil)
+		wsConnection, err := websocket.Accept(ctx.Writer, ctx.Request, &websocket.AcceptOptions{
+			OriginPatterns: []string{"*"},
+		})
+		log.Print("connect")
 		if err != nil {
 			processError(ctx, err)
 			return
 		}
 		defer wsConnection.CloseNow()
 		for {
+			log.Print("for")
 			wsMesType, dataBytes, err := wsConnection.Read(ctx)
 			if err != nil {
 				processError(ctx, err)

@@ -80,7 +80,7 @@ func JoinParty(deciderUid string, partyUid int, user_uid string, role string) er
 	defer deciders[deciderUid][partyUid].mux.Unlock()
 	switch role {
 	case roleUser:
-		if len(deciders[deciderUid][partyUid].Users) == 2 {
+		if len(deciders[deciderUid][partyUid].Users) >= 2 {
 			return errors.Errorf("Full")
 		}
 		deciders[deciderUid][partyUid].Users =
