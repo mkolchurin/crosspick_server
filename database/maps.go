@@ -2,9 +2,12 @@ package database
 
 import (
 	"fmt"
+
+	"gorm.io/gorm"
 )
 
 type Maps struct {
+	gorm.Model
 	Id          uint   `gorm:"primary_key;auto_increment;not_null;type:serial"`
 	Name        string `gorm:"uniq"`
 	Mode        uint16

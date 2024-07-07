@@ -8,8 +8,8 @@ type Deciders struct {
 	Title       string `gorm:"uniq"`
 	Description string
 	Author      string
-	CreatedAt   int64 `gorm:"autoCreateTime"`
-	Maps        []Maps
+	CreatedAt   int64  `gorm:"autoCreateTime"`
+	Maps        []Maps `gorm:"many2many:deciders_maps;"`
 }
 
 func CreateDecider(title string, description string, author string, maps []Maps) error {
