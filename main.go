@@ -29,7 +29,7 @@ func main() {
 	r := gin.Default()
 	router.InitWebSocketsDecider(r)
 
-	router.InitMaps(r)
+	router.InitDatabaseRouter(r)
 	router.InitS3(r, cfg)
 	router.InitSpa(r)
 
