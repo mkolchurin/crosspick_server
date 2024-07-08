@@ -2,7 +2,9 @@ package main
 
 import (
 	"log"
+	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/mkolchurin/crosspick_server/appconfig"
 	"github.com/mkolchurin/crosspick_server/database"
 	"github.com/mkolchurin/crosspick_server/router"
@@ -27,6 +29,18 @@ func main() {
 
 	gin.SetMode(gin.DebugMode)
 	r := gin.Default()
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"POST", "GET", "DELETE"},
+		AllowHeaders:     []string{"Origin"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		AllowOriginFunc: func(origin string) bool {
+			return true
+		},
+		MaxAge: 12 * time.Hour,
+	}))
+
 	router.InitWebSocketsDecider(r)
 
 	router.InitDatabaseRouter(r)
