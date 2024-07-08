@@ -4,20 +4,19 @@ import "gorm.io/gorm"
 
 type Deciders struct {
 	gorm.Model
-	Id          uint   `gorm:"primary_key;auto_increment;not_null;type:serial"`
 	Title       string `gorm:"uniq"`
 	Description string
-	Author      string
 	CreatedAt   int64  `gorm:"autoCreateTime"`
 	Maps        []Maps `gorm:"many2many:deciders_maps;"`
+	CreatorId   uint   `gorm:"many2many:users;"`
 }
 
-func CreateDecider(title string, description string, author string, maps []Maps) error {
+func CreateDecider(title string, description string, creatorId uint, maps []Maps) error {
 
 	decider := Deciders{
 		Title:       title,
 		Description: description,
-		Author:      author,
+		CreatorId:   creatorId,
 		Maps:        maps,
 	}
 	tx := db.Model(&Deciders{}).Preload("Maps").Create(&decider)

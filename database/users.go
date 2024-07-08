@@ -6,7 +6,6 @@ import (
 
 type Users struct {
 	gorm.Model
-	Id       uint   `gorm:"primary_key;auto_increment;not_null;type:serial"`
 	Username string `gorm:"uniq"`
 	Password string
 	Email    string
@@ -15,7 +14,6 @@ type Users struct {
 
 type Roles struct {
 	gorm.Model
-	Id   uint   `gorm:"primary_key;auto_increment;not_null;type:serial"`
 	Name string `gorm:"uniq"`
 }
 
@@ -120,21 +118,5 @@ func RemoveRoleFromUser(username string, roleName string) error {
 	if err != nil {
 		return err
 	}
-	return db.Model(&user).Association("Roles").Delete(&role)
-}
-
-func AddRoleToUserById(userId uint, roleId uint) error {
-	var user Users
-	var role Roles
-	user = Users{Id: userId}
-	role = Roles{Id: roleId}
-	return db.Model(&user).Association("Roles").Append(&role)
-}
-
-func RemoveRoleFromUserById(userId uint, roleId uint) error {
-	var user Users
-	var role Roles
-	user = Users{Id: userId}
-	role = Roles{Id: roleId}
 	return db.Model(&user).Association("Roles").Delete(&role)
 }

@@ -8,7 +8,6 @@ import (
 
 type Maps struct {
 	gorm.Model
-	Id          uint   `gorm:"primary_key;auto_increment;not_null;type:serial"`
 	Name        string `gorm:"uniq"`
 	Mode        uint16
 	Icon        string
@@ -32,7 +31,7 @@ func InsertMap(name string, mode uint16, icon_path string, description string, a
 	if mode < 2 || mode > 8 {
 		return fmt.Errorf("invalid mode")
 	}
-	tx := db.Table("maps").Create(&Maps{
+	return InsertMapByStruct(&Maps{
 		Name:        name,
 		Mode:        mode,
 		Icon:        icon_path,
@@ -41,6 +40,10 @@ func InsertMap(name string, mode uint16, icon_path string, description string, a
 		Author:      author,
 		UploaderId:  uploaderId,
 	})
+}
+
+func InsertMapByStruct(maps *Maps) error {
+	tx := db.Table("maps").Create(&maps)
 	if tx.Error != nil {
 		return tx.Error
 	}

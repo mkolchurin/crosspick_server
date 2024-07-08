@@ -9,7 +9,11 @@ func TestCreate(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	err = CreateDecider("sample", "description", "author", maps)
+	user, err := GetUser("admin")
+	if err != nil {
+		t.Error(err)
+	}
+	err = CreateDecider("sample", "description", user.ID, maps)
 	if err != nil {
 		t.Error(err)
 	}
