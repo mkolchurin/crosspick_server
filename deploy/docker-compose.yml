@@ -1,0 +1,66 @@
+version: "3.8"
+
+services:
+  database:
+    image: "postgres:13"
+    container_name: "postgres"
+    user: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      PGUSER: postgres
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "test"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}" ]
+    networks:
+      - net0
+  app:
+    build: ../.
+    container_name: "crosspick_decider"
+    ports:
+      - "9988:9988"
+    depends_on:
+      - minio
+      - database
+    links:
+      - minio
+      - database
+    networks:
+      - net0
+  minio:
+    image: "quay.io/minio/minio"
+    container_name: "minio"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: "root"
+      MINIO_ROOT_PASSWORD: "password"
+    volumes:
+      - ./data:/data
+    command: server /data --console-address ":9001"
+    entrypoint: >
+      /bin/sh -c '
+        isAlive() { curl -sf http://127.0.0.1:9000/minio/health/live; }    # check if Minio is alive
+        minio $0 "$@" --quiet & echo $! > /tmp/minio.pid                   # start Minio in the background
+        while ! isAlive; do sleep 0.1; done                                # wait until Minio is alive
+        mc alias set minio http://127.0.0.1:9000 $${MINIO_ROOT_USER} $${MINIO_ROOT_PASSWORD} # setup Minio client
+        mc mb minio/static || true                                    # create a test bucket
+        mc anonymous set public minio/static                          # make the test bucket public
+        kill -s INT $(cat /tmp/minio.pid) && rm /tmp/minio.pid             # stop Minio
+        while isAlive; do sleep 0.1; done                                  # wait until Minio is stopped
+        exec minio $0 "$@"                                                 # start Minio in the foreground
+      '
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://127.0.0.1:9000/minio/health/live']
+      interval: 10s
+      start_interval: 1s
+      start_period: 10s
+    networks:
+      - net0
+networks:
+  net0:
