@@ -26,11 +26,37 @@ func CreateDecider(title string, description string, creatorId uint, maps []Maps
 	return nil
 }
 
-func GetDeciders() ([]Deciders, error) {
-	var Deciders []Deciders
-	err := db.Find(&Deciders)
-	if err.Error != nil {
-		return nil, err.Error
+func DeleteDecider(id uint) error {
+	tx := db.Delete(&Deciders{}, id)
+	if tx.Error != nil {
+		return tx.Error
 	}
-	return Deciders, nil
+	return nil
+}
+
+func GetDeciderByTitle(title string) (*Deciders, error) {
+	var decider Deciders
+	tx := db.Where("Title = ?", title).First(&decider)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	return &decider, nil
+}
+
+func GetDecider(id uint) (*Deciders, error) {
+	var decider Deciders
+	tx := db.Preload("Maps").Where("ID == ?", id).First(&decider)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	return &decider, nil
+}
+
+func GetDeciders() ([]Deciders, error) {
+	var deciders []Deciders
+	tx := db.Preload("Maps").Find(&deciders)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	return deciders, nil
 }

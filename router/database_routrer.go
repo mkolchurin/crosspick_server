@@ -1,6 +1,8 @@
 package router
 
 import (
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 	"github.com/mkolchurin/crosspick_server/database"
 )
@@ -8,6 +10,7 @@ import (
 func InitDatabaseRouter(r *gin.Engine) {
 	r.GET("/api/v1/db/:op", func(ctx *gin.Context) {
 		operation := ctx.Param("op")
+		// idString := ctx.Param("id")
 		switch operation {
 		case "deciders":
 			deciders, err := database.GetDeciders()
@@ -98,6 +101,48 @@ func InitDatabaseRouter(r *gin.Engine) {
 			ctx.JSON(200, gin.H{"message": "User created"})
 		default:
 			ctx.JSON(400, gin.H{"error": "Unknown operation"})
+		}
+	})
+	r.DELETE("/api/v1/db/:op/:id", func(ctx *gin.Context) {
+		operation := ctx.Param("op")
+		idString := ctx.Param("id")
+		switch operation {
+		case "deciders":
+			id, err := strconv.ParseUint(idString, 10, 64)
+			if err != nil {
+				processError(ctx, err)
+				return
+			}
+			err = database.DeleteDecider(uint(id))
+			if err != nil {
+				processError(ctx, err)
+				return
+			}
+			ctx.JSON(200, gin.H{"message": "Decider deleted"})
+		case "maps":
+			err := database.DeleteMap(idString)
+			if err != nil {
+				processError(ctx, err)
+				return
+			}
+			ctx.JSON(200, gin.H{"message": "Map deleted"})
+		case "roles":
+			err := database.DeleteRole(idString)
+			if err != nil {
+				processError(ctx, err)
+				return
+			}
+			ctx.JSON(200, gin.H{"message": "Role deleted"})
+		case "users":
+			err := database.DeleteUser(idString)
+			if err != nil {
+				processError(ctx, err)
+				return
+			}
+			ctx.JSON(200, gin.H{"message": "User deleted"})
+		default:
+			ctx.JSON(400, gin.H{"error": "Unknown operation"})
+
 		}
 	})
 

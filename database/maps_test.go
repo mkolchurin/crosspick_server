@@ -32,11 +32,11 @@ func TestInsertMap(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	RemoveMap("test")
+	DeleteMap("test")
 }
 
 func TestRemoveMap(t *testing.T) {
-	err := RemoveMap("test")
+	err := DeleteMap("test")
 	if err != nil {
 		t.Error(err)
 	}

@@ -50,7 +50,7 @@ func InsertMapByStruct(maps *Maps) error {
 	return nil
 }
 
-func RemoveMap(name string) error {
+func DeleteMap(name string) error {
 	tx := db.Table("maps").Where("name = ?", name).Delete(&Maps{})
 	if tx.Error != nil {
 		return tx.Error

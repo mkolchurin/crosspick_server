@@ -60,7 +60,7 @@ func CreateRole(name string) error {
 	return nil
 }
 
-func RemoveRole(name string) error {
+func DeleteRole(name string) error {
 	tx := db.Table("roles").Where("name = ?", name).Delete(&Roles{})
 	if tx.Error != nil {
 		return tx.Error
@@ -68,7 +68,7 @@ func RemoveRole(name string) error {
 	return nil
 }
 
-func RemoveUser(username string) error {
+func DeleteUser(username string) error {
 	tx := db.Table("users").Where("username = ?", username).Delete(&Users{})
 	if tx.Error != nil {
 		return tx.Error
